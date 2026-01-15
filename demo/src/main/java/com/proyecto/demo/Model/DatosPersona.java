@@ -32,16 +32,19 @@ public class DatosPersona {
         this.contrasena = contrasena;
     }
 
-    public boolean validarDatosLogIn (String correo, String contrasena)
-    {
-        Cliente cliente= new Cliente(correo,contrasena,"","");
-        Administrador admin= new Administrador(); //quitar
-        if (correo.equals("admin@gmail.com") && contrasena.equals(admin.getContrasena()))
-            return true;
-        else if (cliente.verificarDatos(correo, contrasena))
-            return true;
-        else
-            return false;
+public boolean validarDatosLogIn(String correo, String contrasena) {
+    if (correo == null || contrasena == null) return false;
+    if (correo.trim().isEmpty() || contrasena.trim().isEmpty()) return false;
+
+    // Admin por defecto (coherente con el Controller)
+    if (correo.equals("admin@gmail.com") && contrasena.equals("admin1234")) {
+        return true;
     }
+
+    // Validación para clientes registrados
+    Cliente cliente = new Cliente(correo, contrasena, "", "");
+    return cliente.verificarDatos(correo, contrasena);
+}
+
 }
 

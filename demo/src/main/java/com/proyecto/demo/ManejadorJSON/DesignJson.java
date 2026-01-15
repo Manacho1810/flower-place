@@ -1,5 +1,6 @@
 package com.proyecto.demo.ManejadorJSON;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -15,6 +16,15 @@ import com.proyecto.demo.Model.Design;
 import com.proyecto.demo.Model.Producto;
 
 public class DesignJson extends Design {
+        private static final String BASE =
+            System.getProperty("user.dir")
+            + File.separator + "src" + File.separator + "main" + File.separator + "java"
+            + File.separator + "com" + File.separator + "proyecto"
+            + File.separator + "demo" + File.separator + "Json";
+
+    private static final String DESIGN_PATH =
+            BASE + File.separator + "design.json";
+
     public DesignJson(ArrayList<Producto> productos, String nombre, float precio) {
         super(productos, nombre, precio);
     }
@@ -25,7 +35,7 @@ public class DesignJson extends Design {
         try {
             Gson gson = new Gson();
             Object FilePath;
-            JsonReader reader = new JsonReader(new FileReader("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//design.json"));
+            JsonReader reader = new JsonReader(new FileReader(DESIGN_PATH));
             Design[] designs = gson.fromJson(reader, Design[].class);
             List<Design> designLista = new ArrayList<>(Arrays.asList(designs));
             List<Design> nuevaLista = new ArrayList<>();
@@ -47,13 +57,13 @@ public class DesignJson extends Design {
     static public void guardarDesign (Design design) { //Le paso el objeto que quiero guardar en la lista del json
         try {
             Gson gson = new Gson();
-            JsonReader reader = new JsonReader(new FileReader("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//design.json"));
+            JsonReader reader = new JsonReader(new FileReader(DESIGN_PATH));
             Design[] designs = gson.fromJson(reader, Design[].class);
             List<Design> designLista= new ArrayList<>(Arrays.asList(designs));
 
             designLista.add(design);
 
-            FileWriter fw = new FileWriter("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//design.json");
+            FileWriter fw = new FileWriter(DESIGN_PATH);
             StringWriter sw = new StringWriter();
             sw.write(gson.toJson(designLista));
             fw.write(sw.toString());
@@ -68,7 +78,7 @@ public class DesignJson extends Design {
     public static void eliminarDesign(String nombreDesign) throws IOException {
         // Leer el JSON existente
         Gson gson = new Gson();
-        List<Design> designs = gson.fromJson(new FileReader("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//design.json"), new TypeToken<List<Design>>() {}.getType());
+        List<Design> designs = gson.fromJson(new FileReader(DESIGN_PATH), new TypeToken<List<Design>>() {}.getType());
 
         // Eliminar el producto
         List<Design> designsActualizados = new ArrayList<>();
@@ -79,7 +89,7 @@ public class DesignJson extends Design {
         }
 
         // Escribir el JSON actualizado
-        try (FileWriter writer = new FileWriter("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//design.json")) {
+        try (FileWriter writer = new FileWriter(DESIGN_PATH)) {
             gson.toJson(designsActualizados, writer);
         }
     }

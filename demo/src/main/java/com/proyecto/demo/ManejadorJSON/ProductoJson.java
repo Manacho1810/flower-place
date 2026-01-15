@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import com.proyecto.demo.Model.Producto;
 
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +12,15 @@ import com.google.gson.reflect.TypeToken;
 
 
 public class ProductoJson extends Producto {
+        private static final String BASE =
+            System.getProperty("user.dir")
+            + File.separator + "src" + File.separator + "main" + File.separator + "java"
+            + File.separator + "com" + File.separator + "proyecto"
+            + File.separator + "demo" + File.separator + "Json";
+
+    private static final String PRODUCTO_PATH =
+            BASE + File.separator + "producto.json";
+
     public ProductoJson(String nombre, float precio, int cantidad) {
         super(nombre, precio, cantidad);
     }
@@ -24,7 +32,7 @@ public class ProductoJson extends Producto {
         try {
             Gson gson = new Gson();
             Object FilePath;
-            JsonReader reader = new JsonReader(new FileReader("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//producto.json"));
+            JsonReader reader = new JsonReader(new FileReader(PRODUCTO_PATH));
             Producto[] productos = gson.fromJson(reader, Producto[].class);
             ArrayList<Producto> productoLista = new ArrayList<>(Arrays.asList(productos));
             ArrayList<Producto> nuevaLista = new ArrayList<Producto>();
@@ -54,7 +62,7 @@ public class ProductoJson extends Producto {
     static public ArrayList<Producto> obtenerProductosTotales() {
         try {
             Gson gson = new Gson();
-            JsonReader reader = new JsonReader(new FileReader("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//producto.json"));
+            JsonReader reader = new JsonReader(new FileReader(PRODUCTO_PATH));
             Producto[] productos = gson.fromJson(reader, Producto[].class);
             if (productos == null || productos.length == 0) {
                 return new ArrayList<Producto>(); // Retorna un ArrayList vacío
@@ -73,13 +81,13 @@ public class ProductoJson extends Producto {
     static public void guardarProducto(Producto producto) { //Le paso el objeto que quiero guardar en la lista del json
         try {
             Gson gson = new Gson();
-            JsonReader reader = new JsonReader(new FileReader("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//producto.json"));
+            JsonReader reader = new JsonReader(new FileReader(PRODUCTO_PATH));
             Producto[] productos = gson.fromJson(reader, Producto[].class);
             List<Producto> productoLista= new ArrayList<>(Arrays.asList(productos));
 
             productoLista.add(producto);
 
-            FileWriter fw = new FileWriter("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//producto.json");
+            FileWriter fw = new FileWriter(PRODUCTO_PATH);
             StringWriter sw = new StringWriter();
             sw.write(gson.toJson(productoLista));
             fw.write(sw.toString());
@@ -94,7 +102,7 @@ public class ProductoJson extends Producto {
     public static void eliminarProducto(String nombreProducto) throws IOException {
         // Leer el JSON existente
         Gson gson = new Gson();
-        List<Producto> productos = gson.fromJson(new FileReader("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//producto.json"), new TypeToken<List<Producto>>() {}.getType());
+        List<Producto> productos = gson.fromJson(new FileReader(PRODUCTO_PATH), new TypeToken<List<Producto>>() {}.getType());
 
         // Eliminar el producto
         List<Producto> productosActualizados = new ArrayList<>();
@@ -105,7 +113,7 @@ public class ProductoJson extends Producto {
         }
 
         // Escribir el JSON actualizado
-        try (FileWriter writer = new FileWriter("C://Users//MGI//Documents//IngenieriaSoftwareProyecto//flower-place//demo//src//main//java//com//proyecto//demo//Json//producto.json")) {
+        try (FileWriter writer = new FileWriter(PRODUCTO_PATH)) {
             gson.toJson(productosActualizados, writer);
         }
         catch (IOException e) {

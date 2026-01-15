@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.io.File;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -21,6 +22,15 @@ import com.proyecto.demo.Model.Producto;
 }*/
 
     public class AdministradorJson extends Administrador {
+            private static final String BASE =
+            System.getProperty("user.dir")
+            + File.separator + "src" + File.separator + "main" + File.separator + "java"
+            + File.separator + "com" + File.separator + "proyecto"
+            + File.separator + "demo" + File.separator + "Json";
+
+    private static final String ADMIN_PATH =
+            BASE + File.separator + "administrador.json";
+
         public AdministradorJson(String correo, String contrasena, String nombre, String numeroTelefonico, ArrayList<Producto> productos, ArrayList<Pedido> pedidos) {
             super();
         }
@@ -48,7 +58,7 @@ import com.proyecto.demo.Model.Producto;
     //En esta forma si se toma en cuenta la excepcion de que el json este vacio
     static public Administrador obtenerAdmin() throws IOException {
         Gson gson = new Gson();
-        JsonReader reader = new JsonReader(new FileReader("src//main//java//com//proyecto//demo//Json//administrador.json"));
+        JsonReader reader = new JsonReader(new FileReader(ADMIN_PATH));
         try {
             Administrador administrador = gson.fromJson(reader, Administrador.class);
             System.out.println("    Nombre del Admin: " + administrador.getNombre());
@@ -101,7 +111,7 @@ import com.proyecto.demo.Model.Producto;
     //En esta forma es cuando es un solo objeto, no funciona si la estructura del archivo json es de lista
     public static void guardarAdministrador(Administrador administrador) throws IOException { //Se le pasa el objeto que deseo guardar
        // Validar si el archivo existe y está vacío
-       File archivo = new File("src//main//java//com//proyecto//demo//Json//administrador.json");
+       File archivo = new File(ADMIN_PATH);
        if (archivo.exists() && archivo.length() > 0) {
            throw new IOException("El archivo JSON ya contiene datos, y solo puede tener un Administrador");
        }
@@ -110,7 +120,7 @@ import com.proyecto.demo.Model.Producto;
        String json = gson.toJson(administrador);
 
        // Sobrescribimos el archivo JSON existente
-       FileWriter writer = new FileWriter("src//main//java//com//proyecto//demo//Json//administrador.json");
+       FileWriter writer = new FileWriter(ADMIN_PATH);
        writer.write(json);
        writer.close();
    }
@@ -147,7 +157,7 @@ import com.proyecto.demo.Model.Producto;
     //Para Eliminar un objeto admin del JSON
     public static void eliminarAdministrador() throws IOException {
         // Validar si el archivo existe y tiene contenido (Para poder eliminar el admin, debe tener informacion el archivo)
-        File archivo = new File("src//main//java//com//proyecto//demo//Json//administrador.json");
+        File archivo = new File(ADMIN_PATH);
         if (!archivo.exists() || archivo.length() == 0) { //Si no lo encuentra o esta vacio
             throw new IOException("El archivo JSON no existe o está vacío.");
         }
